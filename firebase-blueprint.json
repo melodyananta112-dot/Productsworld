@@ -1,0 +1,79 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "A product for sale in the store",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Product name" },
+        "description": { "type": "string", "description": "Product description" },
+        "price": { "type": "number", "description": "Product price" },
+        "image": { "type": "string", "description": "Product image URL" },
+        "category": { "type": "string", "description": "Product category" },
+        "quantity": { "type": "number", "description": "Available quantity" },
+        "createdAt": { "type": "number", "description": "Creation timestamp" },
+        "updatedAt": { "type": "number", "description": "Last update timestamp" }
+      },
+      "required": ["name", "price", "image", "category", "quantity", "createdAt"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "A customer order",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "ID of the user who placed the order" },
+        "userName": { "type": "string", "description": "Name of the user" },
+        "userEmail": { "type": "string", "description": "Email of the user" },
+        "items": { "type": "array", "description": "List of ordered items" },
+        "total": { "type": "number", "description": "Total order amount" },
+        "status": { "type": "string", "enum": ["pending", "processing", "shipped", "delivered", "cancelled"] },
+        "address": { "type": "string", "description": "Shipping address" },
+        "phone": { "type": "string", "description": "Contact phone number" },
+        "createdAt": { "type": "number", "description": "Order timestamp" }
+      },
+      "required": ["userId", "items", "total", "status", "address", "phone", "createdAt"]
+    },
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "User account information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "description": "User email" },
+        "displayName": { "type": "string", "description": "User display name" },
+        "role": { "type": "string", "enum": ["admin", "customer"] },
+        "createdAt": { "type": "number", "description": "Account creation timestamp" }
+      },
+      "required": ["uid", "email", "role", "createdAt"]
+    },
+    "SlideshowItem": {
+      "title": "Slideshow Item",
+      "description": "An image item for the homepage slideshow",
+      "type": "object",
+      "properties": {
+        "url": { "type": "string", "description": "Image URL" },
+        "order": { "type": "number", "description": "Sort order" },
+        "createdAt": { "type": "number", "description": "Creation timestamp" }
+      },
+      "required": ["url", "order", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Store products"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Store customer orders"
+    },
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Store user profiles"
+    },
+    "/slideshow/{itemId}": {
+      "schema": "SlideshowItem",
+      "description": "Store homepage slideshow images"
+    }
+  }
+}
