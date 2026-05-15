@@ -787,8 +787,8 @@ export default function HomePage() {
                               </CardHeader>
                               <CardContent className="pb-3 px-3 pt-1 mt-auto text-center flex flex-col justify-end">
                                 <div className="flex flex-col items-center gap-1">
-                                  <span className="text-[1.1rem] md:text-xl font-serif font-black text-[#fbbf24] tracking-tighter shrink-0">
-                                    <span className="text-[#fbbf24] mr-0.5">৳</span>{product.price}
+                                  <span className="text-[1.1rem] md:text-xl font-sans font-medium text-[#fbbf24] tracking-tight shrink-0">
+                                    <span className="font-serif font-black mr-1">৳</span>{product.price}
                                   </span>
                                   <div className="w-8 md:w-10 h-1 bg-[#fbbf24]/30 rounded-full mt-1 group-hover:w-16 group-hover:bg-[#fbbf24] transition-all duration-500"></div>
                                 </div>
