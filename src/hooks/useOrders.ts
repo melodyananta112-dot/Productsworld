@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, onSnapshot, query, orderBy, where } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, where } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType, isQuotaError } from '../lib/firebase';
 import { Order } from '../types';
 import { useAuth } from '../context/AuthContext';
@@ -17,43 +17,47 @@ export function useOrders() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) {
-      setOrders([]);
-      setLoading(false);
-      return;
-    }
-
-    let q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
-    
-    if (!isAdmin) {
-      q = query(collection(db, 'orders'), where('userId', '==', user.uid));
-    }
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      let ordersData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Order[];
-      
-      if (!isAdmin) {
-        ordersData.sort((a, b) => b.createdAt - a.createdAt);
-      }
-      
-      setOrders(ordersData);
-      localStorage.setItem('fallback_orders', JSON.stringify(ordersData));
-      localStorage.removeItem('firestore_quota_exceeded');
-      setLoading(false);
-    }, (error) => {
-      if (isQuotaError(error)) {
-        localStorage.setItem('firestore_quota_exceeded', 'true');
+    const fetchOrders = async () => {
+      if (!user) {
+        setOrders([]);
         setLoading(false);
-        console.warn('Using local fallback orders due to quota.');
-      } else {
-        handleFirestoreError(error, OperationType.LIST, 'orders');
+        return;
       }
-    });
 
-    return () => unsubscribe();
+      setLoading(true);
+      try {
+        let q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
+        
+        if (!isAdmin) {
+          q = query(collection(db, 'orders'), where('userId', '==', user.uid));
+        }
+
+        const snapshot = await getDocs(q);
+        let ordersData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as Order[];
+        
+        if (!isAdmin) {
+          ordersData.sort((a, b) => b.createdAt - a.createdAt);
+        }
+        
+        setOrders(ordersData);
+        localStorage.setItem('fallback_orders', JSON.stringify(ordersData));
+        localStorage.removeItem('firestore_quota_exceeded');
+      } catch (error) {
+        if (isQuotaError(error)) {
+          localStorage.setItem('firestore_quota_exceeded', 'true');
+          console.warn('Using local fallback orders due to quota.');
+        } else {
+          handleFirestoreError(error, OperationType.LIST, 'orders');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
   }, [user, isAdmin]);
 
   return { orders, loading };

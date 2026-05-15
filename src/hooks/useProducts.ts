@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, onSnapshot, query, orderBy, limit } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType, isQuotaError } from '../lib/firebase';
 import { Product } from '../types';
 
@@ -15,28 +15,31 @@ export function useProducts(limitCount: number = 20) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'), limit(limitCount));
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const productsData = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })) as Product[];
-        
-        setProducts(productsData);
-        localStorage.setItem('fallback_products', JSON.stringify(productsData));
-        localStorage.removeItem('firestore_quota_exceeded');
-        setLoading(false);
-      }, (error) => {
-      if (isQuotaError(error)) {
-        localStorage.setItem('firestore_quota_exceeded', 'true');
-        setLoading(false);
-        console.warn('Using local fallback products in hook due to quota.');
-      } else {
-        handleFirestoreError(error, OperationType.LIST, 'products');
-      }
-    });
+    const fetchProducts = async () => {
+        try {
+            const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'), limit(limitCount));
+            const snapshot = await getDocs(q);
+            const productsData = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data()
+            })) as Product[];
+            
+            setProducts(productsData);
+            localStorage.setItem('fallback_products', JSON.stringify(productsData));
+            localStorage.removeItem('firestore_quota_exceeded');
+        } catch (error) {
+            if (isQuotaError(error)) {
+                localStorage.setItem('firestore_quota_exceeded', 'true');
+                console.warn('Using local fallback products in hook due to quota.');
+            } else {
+                handleFirestoreError(error, OperationType.LIST, 'products');
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    return () => unsubscribe();
+    fetchProducts();
   }, [limitCount]);
 
   return { products, loading };

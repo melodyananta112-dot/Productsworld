@@ -133,7 +133,7 @@ export default function CartPage() {
                          <span className="text-[#fbbf24] font-bold text-xl">{item.quantity}</span>
                          <Button variant="outline" size="lg" onClick={() => updateCartQuantity(item.productId, item.quantity + 1, item.color)} className="text-[#fbbf24] font-bold text-lg px-4">+</Button>
                       </div>
-                      <p className="font-serif font-bold text-[#fbbf24] text-xl mt-3">৳{item.product?.price}</p>
+                      <p className="font-serif font-black text-[#fbbf24] text-xl mt-3"><span className="text-[#fbbf24] mr-0.5">৳</span>{item.product?.price}</p>
                     </div>
                     <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.productId, item.color)} className="hover:bg-red-500/10 text-red-500">
                       <Trash2 className="w-6 h-6" />
@@ -168,7 +168,7 @@ export default function CartPage() {
                            }`}
                          >
                            <span className="text-[#fbbf24] font-bold text-sm">{option.label}</span>
-                           <span className="text-[#fbbf24] font-bold text-sm">{option.price}৳</span>
+                           <span className="text-[#fbbf24] font-bold text-sm"><span className="text-[#fbbf24] mr-0.5">৳</span>{option.price}</span>
                          </button>
                        ))}
                      </div>
@@ -177,7 +177,7 @@ export default function CartPage() {
                   <div className="space-y-4 pt-6 border-t border-[#fbbf24]/20">
                     <div className="flex justify-between text-[#fbbf24] text-base">
                       <span>Total Product Price:</span>
-                      <span className="font-bold">{total.toFixed(2)}৳</span>
+                      <span className="font-bold"><span className="text-[#fbbf24] mr-0.5">৳</span>{total.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between text-[#fbbf24] text-base">
                       <span>Total Quantity:</span>
@@ -185,17 +185,17 @@ export default function CartPage() {
                     </div>
                     <div className="flex justify-between text-[#fbbf24] text-base">
                       <span>Delivery Charge:</span>
-                      <span className="font-bold">{deliveryCharge}৳</span>
+                      <span className="font-bold"><span className="text-[#fbbf24] mr-0.5">৳</span>{deliveryCharge}</span>
                     </div>
                     <div className="flex justify-between text-[#fbbf24] text-base">
                       <span>Discount:</span>
                       <span className={`font-bold ${appliedDiscount > 0 ? 'text-red-500' : ''}`}>
-                        {appliedDiscount > 0 ? `-${appliedDiscount}৳` : '0৳'}
+                        {appliedDiscount > 0 ? <><span className="text-red-500 mr-0.5">৳</span>-{appliedDiscount}</> : '0৳'}
                       </span>
                     </div>
                     <div className="flex justify-between items-end pt-4 border-t-2 border-[#fbbf24]/30">
                       <span className="text-xl font-serif font-bold text-[#fbbf24]">Final Amount</span>
-                      <span className="text-2xl font-serif font-bold text-[#fbbf24]">৳{finalTotal.toFixed(2)}</span>
+                      <span className="text-2xl font-serif font-bold text-[#fbbf24]"><span className="text-[#fbbf24] mr-1">৳</span>{finalTotal.toFixed(2)}</span>
                     </div>
                   </div>
 

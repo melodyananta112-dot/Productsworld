@@ -298,21 +298,21 @@ export default function DeliveryPage() {
           <div className="pt-10 border-t border-[#fbbf24]/10 space-y-5">
             <div className="flex justify-between items-center">
               <span className="text-[#fbbf24] opacity-70 font-bold text-lg">Product Price</span>
-              <span className="font-bold text-[#fbbf24] text-lg">৳ {total}</span>
+              <span className="font-bold text-[#fbbf24] text-lg"><span className="text-[#fbbf24] mr-0.5">৳</span>{total}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-[#fbbf24] opacity-70 font-bold text-lg">Delivery Charge</span>
-              <span className="font-bold text-[#fbbf24] text-lg">৳ {localDeliveryCharge}</span>
+              <span className="font-bold text-[#fbbf24] text-lg"><span className="text-[#fbbf24] mr-0.5">৳</span>{localDeliveryCharge}</span>
             </div>
             {(total > 500) && (
               <div className="flex justify-between items-center">
                 <span className="text-[#fbbf24] opacity-70 font-bold text-lg">Discount Applied</span>
-                <span className="font-bold text-green-400 text-lg">- ৳ 50</span>
+                <span className="font-bold text-green-400 text-lg">- <span className="text-green-400 mr-0.5">৳</span>50</span>
               </div>
             )}
             <div className="flex justify-between items-center pt-4">
               <span className="text-[#fbbf24] text-sm font-bold opacity-90 uppercase tracking-widest">Total Payable</span>
-              <span className="text-5xl font-serif font-black gold-text">৳ {localFinalTotal}</span>
+              <span className="text-5xl font-serif font-black gold-text"><span className="font-serif">৳</span> {localFinalTotal}</span>
             </div>
             <Button 
               onClick={handleConfirmOrder} 

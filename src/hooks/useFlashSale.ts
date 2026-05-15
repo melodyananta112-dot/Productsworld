@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { collection, onSnapshot, query, where, Timestamp } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { collection, getDocs, query } from 'firebase/firestore';
+import { db, handleFirestoreError, OperationType, isQuotaError } from '../lib/firebase';
 
 export interface FlashSale {
   id: string;
@@ -18,24 +18,28 @@ export function useFlashSale() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const q = query(
-      collection(db, 'flash_sale')
-    );
+    const fetchFlashSales = async () => {
+      try {
+        const q = query(collection(db, 'flash_sale'));
+        const snapshot = await getDocs(q);
+        const sales = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as FlashSale[];
+        
+        setFlashSales(sales);
+      } catch (error) {
+        if (isQuotaError(error)) {
+          console.warn('Flash sale fetch blocked by quota.');
+        } else {
+          handleFirestoreError(error, OperationType.LIST, 'flash_sale');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const sales = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as FlashSale[];
-      
-      setFlashSales(sales);
-      setLoading(false);
-    }, (error) => {
-      console.error("Error fetching flash sales", error);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
+    fetchFlashSales();
   }, []);
 
   return { flashSales, loading };

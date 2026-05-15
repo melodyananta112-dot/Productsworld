@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType, isQuotaError } from '@/lib/firebase';
 
 export interface SlideshowItem {
@@ -21,28 +21,31 @@ export function useSlideshow() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const q = query(collection(db, 'slideshow'), orderBy('order', 'asc'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const items = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as SlideshowItem[];
+    const fetchSlideshow = async () => {
+      try {
+        const q = query(collection(db, 'slideshow'), orderBy('order', 'asc'));
+        const snapshot = await getDocs(q);
+        const items = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as SlideshowItem[];
 
-      setImages(items);
-      localStorage.setItem('fallback_slideshow', JSON.stringify(items));
-      localStorage.removeItem('firestore_quota_exceeded');
-      setLoading(false);
-    }, (error) => {
-      if (isQuotaError(error)) {
-        localStorage.setItem('firestore_quota_exceeded', 'true');
+        setImages(items);
+        localStorage.setItem('fallback_slideshow', JSON.stringify(items));
+        localStorage.removeItem('firestore_quota_exceeded');
+      } catch (error) {
+        if (isQuotaError(error)) {
+          localStorage.setItem('firestore_quota_exceeded', 'true');
+          console.warn('Using local fallback for slideshow due to quota.');
+        } else {
+          handleFirestoreError(error, OperationType.LIST, 'slideshow');
+        }
+      } finally {
         setLoading(false);
-        console.warn('Using local fallback for slideshow due to quota.');
-      } else {
-        handleFirestoreError(error, OperationType.LIST, 'slideshow');
       }
-    });
+    };
 
-    return () => unsubscribe();
+    fetchSlideshow();
   }, []);
 
   return { images, loading };

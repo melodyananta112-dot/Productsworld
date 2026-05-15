@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useProducts } from '../hooks/useProducts';
 import { useSlideshow } from '../hooks/useSlideshow';
 import { useFlashSale } from '../hooks/useFlashSale';
@@ -143,11 +143,11 @@ export default function HomePage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [selectedCategory]);
 
-  const filteredProducts = products.filter(p => {
+  const filteredProducts = useMemo(() => products.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = !selectedCategory || p.category === selectedCategory;
     return matchesSearch && matchesCategory;
-  });
+  }), [products, searchQuery, selectedCategory]);
 
   const logoUrl = "https://i.ibb.co.com/TDG0LTVh/logo.png";
 
@@ -308,7 +308,11 @@ export default function HomePage() {
                   <div className="h-px bg-white/5 my-2 mx-4"></div>
 
                   <div className="grid grid-cols-2 lg:grid-cols-1 gap-1">
-                    {CATEGORIES.map((cat) => {
+                    {[...CATEGORIES].sort((a, b) => {
+                      if (a.name === 'Lighting') return -1;
+                      if (b.name === 'Lighting') return 1;
+                      return 0;
+                    }).map((cat) => {
                       const Icon = cat.icon;
                       return (
                         <button 
@@ -712,7 +716,11 @@ export default function HomePage() {
               </div>
             ) : filteredProducts.length > 0 ? (
               <div className="space-y-4 md:space-y-6">
-                {Array.from(new Set(filteredProducts.map(p => p.category || 'other'))).map(categoryKey => {
+                {Array.from(new Set(filteredProducts.map(p => p.category || 'other'))).sort((a, b) => {
+                  if (a === 'lighting') return -1;
+                  if (b === 'lighting') return 1;
+                  return 0;
+                }).map(categoryKey => {
                   const categoryProducts = filteredProducts.filter(p => (p.category || 'other') === categoryKey);
                   if (categoryProducts.length === 0) return null;
                   const categoryName = CATEGORIES.find(c => c.id === categoryKey)?.name || 'Other';

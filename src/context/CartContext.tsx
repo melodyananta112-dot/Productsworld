@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { collection, onSnapshot, query } from 'firebase/firestore';
+import { collection, getDocs, query } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType, isQuotaError } from '../lib/firebase';
 import { Product } from '../types';
 
@@ -44,9 +44,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [quotaExceeded, setQuotaExceeded] = useState(false);
 
   useEffect(() => {
-    const q = query(collection(db, 'products'));
-    const unsubscribe = onSnapshot(q, 
-      (snapshot) => {
+    const fetchProducts = async () => {
+      try {
+        const q = query(collection(db, 'products'));
+        const snapshot = await getDocs(q);
         const productsData = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
@@ -57,8 +58,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem('firestore_quota_exceeded');
         setLoading(false);
         setQuotaExceeded(false);
-      },
-      (error) => {
+      } catch (error) {
         if (isQuotaError(error)) {
           localStorage.setItem('firestore_quota_exceeded', 'true');
           setQuotaExceeded(true);
@@ -68,9 +68,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
           handleFirestoreError(error, OperationType.LIST, 'products');
         }
       }
-    );
+    };
 
-    return () => unsubscribe();
+    fetchProducts();
   }, []);
 
   useEffect(() => {
