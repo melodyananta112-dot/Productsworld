@@ -539,7 +539,7 @@ export default function HomePage() {
                       {selectedProduct.name}
                     </h2>
                     <div className="flex items-center gap-3 md:gap-4 mb-3">
-                      <span className="text-xl md:text-2xl font-serif font-black text-[#fbbf24]">৳{selectedProduct.price}</span>
+                      <span className="text-xl md:text-2xl font-serif font-black text-[#fbbf24]"><span className="text-[#fbbf24] mr-1">৳</span>{selectedProduct.price}</span>
                       <div className="h-4 md:h-5 w-px bg-[#fbbf24]/10"></div>
                       <span className="text-[8px] md:text-[10px] uppercase font-black tracking-[0.2em] text-[#fbbf24]/60"></span>
                     </div>
@@ -788,7 +788,7 @@ export default function HomePage() {
                               <CardContent className="pb-3 px-3 pt-1 mt-auto text-center flex flex-col justify-end">
                                 <div className="flex flex-col items-center gap-1">
                                   <span className="text-[1.1rem] md:text-xl font-serif font-black text-[#fbbf24] tracking-tighter shrink-0">
-                                    ৳{product.price}
+                                    <span className="text-[#fbbf24] mr-0.5">৳</span>{product.price}
                                   </span>
                                   <div className="w-8 md:w-10 h-1 bg-[#fbbf24]/30 rounded-full mt-1 group-hover:w-16 group-hover:bg-[#fbbf24] transition-all duration-500"></div>
                                 </div>
