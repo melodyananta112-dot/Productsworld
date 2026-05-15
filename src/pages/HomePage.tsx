@@ -271,7 +271,7 @@ export default function HomePage() {
       {/* Page Layout */}
       <div className="pt-10 md:pt-14">
         {/* Product Grid Area */}
-        <main className="w-[1600px] max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10" style={{ width: '1600px' }}>
+        <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
         <div className="flex flex-col gap-12">
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
           {/* Sidebar */}
@@ -758,6 +758,7 @@ export default function HomePage() {
                                   alt={product.name}
                                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                   referrerPolicy="no-referrer"
+                                  loading="lazy"
                                 />
                                 <div className="absolute inset-0 bg-[#022c22]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
                                 </div>
