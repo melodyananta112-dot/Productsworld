@@ -25,7 +25,11 @@ export function useProducts(limitCount: number = 20) {
             })) as Product[];
             
             setProducts(productsData);
-            localStorage.setItem('fallback_products', JSON.stringify(productsData));
+            try {
+              localStorage.setItem('fallback_products', JSON.stringify(productsData));
+            } catch (e) {
+              console.warn('Could not save fallback products to localStorage (quota exceeded).');
+            }
             localStorage.removeItem('firestore_quota_exceeded');
         } catch (error) {
             if (isQuotaError(error)) {
