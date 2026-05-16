@@ -760,7 +760,7 @@ export default function HomePage() {
                             className="cursor-pointer h-full"
                           >
                             <Card className="group overflow-hidden border-none bg-[#064e3b]/30 backdrop-blur-sm shadow-xl hover:shadow-[0_20px_60px_rgba(251,191,36,0.15)] transition-all duration-500 rounded-3xl h-full flex flex-col relative border border-[#fbbf24]/5">
-                              <div className="aspect-[4/5] overflow-hidden relative">
+                              <div className="aspect-[3/4] overflow-hidden relative">
                                 <img 
                                   src={product.image} 
                                   alt={product.name}
@@ -770,7 +770,7 @@ export default function HomePage() {
                                 />
                                 <div className="absolute inset-0 bg-[#022c22]/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
                                 </div>
-                                <div className="absolute top-3 right-3 z-20">
+                                <div className="absolute top-2 right-2 z-20">
                                   <Button
                                     variant="ghost"
                                     size="icon"
@@ -778,27 +778,27 @@ export default function HomePage() {
                                       e.stopPropagation();
                                       toggleFavorite(product.id);
                                     }}
-                                    className={`w-8 h-8 rounded-full shadow-xl border border-white/20 transition-all duration-300 ${
+                                    className={`w-7 h-7 rounded-full shadow-xl border border-white/20 transition-all duration-300 ${
                                       isFavorite(product.id) 
                                       ? "bg-[#fbbf24] text-[#064e3b] hover:bg-[#fbbf24]/90" 
                                       : "bg-white/10 backdrop-blur-md text-[#fbbf24] hover:bg-white/20"
                                     }`}
                                   >
-                                    <Heart className={`w-[14px] h-[14px] ${isFavorite(product.id) ? "fill-current" : ""}`} />
+                                    <Heart className={`w-[12px] h-[12px] ${isFavorite(product.id) ? "fill-current" : ""}`} />
                                   </Button>
                                 </div>
                               </div>
-                              <CardHeader className="pt-3 pb-0 px-3 text-center flex flex-col justify-start">
-                                <CardTitle className="text-sm md:text-base font-serif font-black text-white group-hover:text-[#fbbf24] transition-colors duration-300 leading-tight tracking-tight line-clamp-2 w-full" title={product.name}>
+                              <CardHeader className="pt-2 pb-0 px-2 text-center flex flex-col justify-start">
+                                <CardTitle className="text-xs md:text-sm font-serif font-black text-white group-hover:text-[#fbbf24] transition-colors duration-300 leading-tight tracking-tight line-clamp-2 w-full" title={product.name}>
                                   {product.name}
                                 </CardTitle>
                               </CardHeader>
-                              <CardContent className="pb-3 px-3 pt-1 mt-auto text-center flex flex-col justify-end">
-                                <div className="flex flex-col items-center gap-1">
-                                  <span className="text-[1.1rem] md:text-xl font-sans font-medium text-[#fbbf24] tracking-tight shrink-0">
+                              <CardContent className="pb-2 px-2 pt-1 mt-auto text-center flex flex-col justify-end">
+                                <div className="flex flex-col items-center gap-0.5">
+                                  <span className="text-[1rem] md:text-lg font-sans font-medium text-[#fbbf24] tracking-tight shrink-0">
                                     <span className="font-serif font-black mr-1">৳</span>{product.price}
                                   </span>
-                                  <div className="w-8 md:w-10 h-1 bg-[#fbbf24]/30 rounded-full mt-1 group-hover:w-16 group-hover:bg-[#fbbf24] transition-all duration-500"></div>
+                                  <div className="w-6 md:w-8 h-0.5 bg-[#fbbf24]/30 rounded-full mt-0.5 group-hover:w-12 group-hover:bg-[#fbbf24] transition-all duration-500"></div>
                                 </div>
                               </CardContent>
                             </Card>
